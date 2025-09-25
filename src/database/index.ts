@@ -35,7 +35,7 @@ const DBDataSource = new DataSource({
   database: SETTINGS.APP_DB_DATABASE,
   synchronize: true,
   logging: false,
-  entities: [__dirname + "/entities/*.entity.ts"],
+  entities: [UserEntity, UserRoleEntity, ModuleEntity, LabActivityEntity, AssessmentEntity, GradeEntity, PerformanceAnalyticsEntity, ModuleActivationEntity],
   migrations: [__dirname + "/migrations/*.migration.ts"],
   subscribers: [],
   extra: {
