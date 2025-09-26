@@ -21,7 +21,7 @@ ENV NODE_ENV=production
 RUN echo '#!/bin/sh' > /app/start.sh && \
     echo 'echo "🚀 Starting VirtuBuild API..."' >> /app/start.sh && \
     echo 'echo "📡 Setting up database..."' >> /app/start.sh && \
-    echo 'npm run db:setup' >> /app/start.sh && \
+    echo 'node dist/scripts/setup-db.js' >> /app/start.sh && \
     echo 'echo "✅ Database setup completed!"' >> /app/start.sh && \
     echo 'echo "🎯 Starting application..."' >> /app/start.sh && \
     echo 'node dist/index.js' >> /app/start.sh && \
