@@ -42,8 +42,15 @@ export class AdminRouter {
 		this.router.put("/lab-activities/:id", (req, res) => this.adminController.updateLabActivity(req, res));
 		this.router.delete("/lab-activities/:id", (req, res) => this.adminController.deleteLabActivity(req, res));
 
+		this.router.get("/laboratories", (req, res) => this.adminController.getAllLaboratories(req, res));
+		this.router.get("/laboratories/:id", (req, res) => this.adminController.getLaboratoryById(req, res));
+		this.router.post("/laboratories", (req, res) => this.adminController.createLaboratory(req, res));
+		this.router.put("/laboratories/:id", (req, res) => this.adminController.updateLaboratory(req, res));
+		this.router.delete("/laboratories/:id", (req, res) => this.adminController.deleteLaboratory(req, res));
+
 		this.router.get("/assessments", (req, res) => this.adminController.getAllAssessments(req, res));
 		this.router.get("/assessments/:id", (req, res) => this.adminController.getAssessmentById(req, res));
+		this.router.get("/assessments/:id/submissions", (req, res) => this.adminController.getAssessmentSubmissions(req, res));
 		this.router.post("/assessments", (req, res) => this.adminController.createAssessment(req, res));
 		this.router.put("/assessments/:id", (req, res) => this.adminController.updateAssessment(req, res));
 		this.router.delete("/assessments/:id", (req, res) => this.adminController.deleteAssessment(req, res));

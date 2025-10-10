@@ -1,11 +1,12 @@
 import { IsEmail, IsString, IsBoolean, IsOptional, IsNotEmpty, IsNumber, IsObject, IsArray, Min, Max } from "class-validator";
-import { User as UserEntity, UserRole as UserRoleEntity, Module as ModuleEntity, LabActivity as LabActivityEntity, Assessment as AssessmentEntity, Grade as GradeEntity, PerformanceAnalytics as PerformanceAnalyticsEntity, ModuleActivation as ModuleActivationEntity } from "@/database/entities";
+import { User as UserEntity, UserRole as UserRoleEntity, Module as ModuleEntity, LabActivity as LabActivityEntity, Laboratory as LaboratoryEntity, Assessment as AssessmentEntity, Grade as GradeEntity, PerformanceAnalytics as PerformanceAnalyticsEntity, ModuleActivation as ModuleActivationEntity } from "@/database/entities";
 import { type OmitDbFields } from "@/types";
 
 export type User = OmitDbFields<UserEntity>;
 export type UserRole = OmitDbFields<UserRoleEntity>;
 export type Module = OmitDbFields<ModuleEntity>;
 export type LabActivity = OmitDbFields<LabActivityEntity>;
+export type Laboratory = OmitDbFields<LaboratoryEntity>;
 export type Assessment = OmitDbFields<AssessmentEntity>;
 export type Grade = OmitDbFields<GradeEntity>;
 export type PerformanceAnalytics = OmitDbFields<PerformanceAnalyticsEntity>;
@@ -98,30 +99,65 @@ export class LabActivityDataDTO implements LabActivity {
 	@IsObject()
 	componentsMetadata?: any;
 
-	@IsOptional()
-	@IsObject()
-	gamification?: any;
 
 	@IsOptional()
 	@IsBoolean()
 	isEnabled: boolean;
 }
 
-export class AssessmentDataDTO implements Assessment {
+export class LaboratoryDataDTO implements Laboratory {
+	@IsNotEmpty()
+	@IsString()
+	name: string;
+
+	@IsOptional()
+	@IsString()
+	description?: string;
+
+	@IsOptional()
+	@IsString()
+	location?: string;
+
+	@IsOptional()
+	@IsString()
+	capacity?: string;
+
+	@IsOptional()
+	@IsObject()
+	equipment?: any;
+
+	@IsOptional()
+	@IsBoolean()
+	isEnabled: boolean;
+}
+
+export class AssessmentDataDTO implements Omit<Assessment, 'laboratory'> {
 	@IsNotEmpty()
 	@IsNumber()
-	moduleId: number;
+	laboratoryId: number;
+
+	@IsNotEmpty()
+	@IsString()
+	title: string;
+
+	@IsOptional()
+	@IsString()
+	description?: string;
+
+	@IsNumber()
+	@Min(1)
+	@Max(180)
+	timeLimitMinutes: number;
 
 	@IsNotEmpty()
 	@IsObject()
-	quiz: any;
+	questions: any;
 
-	@IsOptional()
 	@IsBoolean()
 	isEnabled: boolean;
 }
 
-export class GradeDataDTO implements Grade {
+export class GradeDataDTO implements Omit<Grade, 'user' | 'activity'> {
 	@IsNotEmpty()
 	@IsNumber()
 	userId: number;
@@ -184,3 +220,4 @@ export class DashboardStatsDTO {
 	@IsString()
 	period?: string;
 }
+

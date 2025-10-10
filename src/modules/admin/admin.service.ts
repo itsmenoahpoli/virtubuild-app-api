@@ -2,8 +2,10 @@ import {
 	usersRepository, 
 	userRolesRepository, 
 	modulesRepository, 
-	labActivitiesRepository, 
+	labActivitiesRepository,
+	laboratoriesRepository, 
 	assessmentsRepository, 
+	assessmentSubmissionsRepository,
 	gradesRepository, 
 	performanceAnalyticsRepository, 
 	moduleActivationsRepository,
@@ -11,7 +13,9 @@ import {
 	UserRoleEntity,
 	ModuleEntity,
 	LabActivityEntity,
+	LaboratoryEntity,
 	AssessmentEntity,
+	AssessmentSubmissionEntity,
 	GradeEntity,
 	PerformanceAnalyticsEntity,
 	ModuleActivationEntity
@@ -21,6 +25,7 @@ import {
 	UserRoleDataDTO, 
 	ModuleDataDTO, 
 	LabActivityDataDTO, 
+	LaboratoryDataDTO,
 	AssessmentDataDTO, 
 	GradeDataDTO, 
 	PerformanceAnalyticsDataDTO, 
@@ -126,10 +131,17 @@ export class AdminService {
 	}
 
 	public async getAllLabActivities(): Promise<LabActivityEntity[]> {
-		return await labActivitiesRepository.find({
-			relations: ["module"],
-			order: { createdAt: "DESC" }
-		});
+		try {
+			console.log("Fetching lab activities...");
+			const result = await labActivitiesRepository.find({
+				order: { createdAt: "DESC" }
+			});
+			console.log("Found lab activities:", result.length);
+			return result;
+		} catch (error) {
+			console.error("Error fetching lab activities:", error);
+			return [];
+		}
 	}
 
 	public async getLabActivityById(id: number): Promise<LabActivityEntity | null> {
@@ -157,18 +169,103 @@ export class AdminService {
 		return result.affected !== 0;
 	}
 
-	public async getAllAssessments(): Promise<AssessmentEntity[]> {
-		return await assessmentsRepository.find({
-			relations: ["module"],
+	public async getAllLaboratories(): Promise<LaboratoryEntity[]> {
+		return await laboratoriesRepository.find({
 			order: { createdAt: "DESC" }
 		});
+	}
+
+	public async getLaboratoryById(id: number): Promise<LaboratoryEntity | null> {
+		return await laboratoriesRepository.findOne({
+			where: { id }
+		});
+	}
+
+	public async createLaboratory(data: LaboratoryDataDTO): Promise<LaboratoryEntity> {
+		const laboratory = laboratoriesRepository.create(data);
+		return await laboratoriesRepository.save(laboratory);
+	}
+
+	public async updateLaboratory(id: number, data: Partial<LaboratoryDataDTO>): Promise<LaboratoryEntity | null> {
+		await laboratoriesRepository.update(id, data);
+		return await this.getLaboratoryById(id);
+	}
+
+	public async deleteLaboratory(id: number): Promise<boolean> {
+		const result = await laboratoriesRepository.delete(id);
+		return result.affected !== 0;
+	}
+
+	public async getAllAssessments(): Promise<any[]> {
+		try {
+			const assessments = await assessmentsRepository.find({
+				order: { createdAt: "DESC" },
+				relations: ["assessmentSubmissions", "assessmentSubmissions.student"]
+			});
+
+			// Transform the data to include submission counts and basic submission info
+			return assessments.map(assessment => ({
+				...assessment,
+				submissionCount: assessment.assessmentSubmissions?.length || 0,
+				hasSubmissions: (assessment.assessmentSubmissions?.length || 0) > 0,
+				recentSubmissions: assessment.assessmentSubmissions?.slice(0, 3).map((sub: AssessmentSubmissionEntity) => ({
+					id: sub.id,
+					score: sub.score,
+					timeSpentSeconds: sub.timeSpentSeconds,
+					isSubmitted: sub.isSubmitted,
+					submittedAt: sub.submittedAt,
+					student: sub.student ? {
+						firstName: sub.student.firstName,
+						lastName: sub.student.lastName,
+						email: sub.student.email
+					} : null
+				})) || []
+			}));
+		} catch (error) {
+			console.error("Error fetching assessments:", error);
+			return [];
+		}
 	}
 
 	public async getAssessmentById(id: number): Promise<AssessmentEntity | null> {
 		return await assessmentsRepository.findOne({
 			where: { id },
-			relations: ["module"]
+			relations: ["laboratory"]
 		});
+	}
+
+	public async getAssessmentSubmissions(assessmentId: number): Promise<any[]> {
+		try {
+			const submissions = await assessmentSubmissionsRepository.find({
+				where: { assessmentId },
+				relations: ["student", "assessment"],
+				order: { submittedAt: "DESC" }
+			});
+
+			return submissions.map((submission: AssessmentSubmissionEntity) => ({
+				id: submission.id,
+				score: submission.score,
+				timeSpentSeconds: submission.timeSpentSeconds,
+				isSubmitted: submission.isSubmitted,
+				submittedAt: submission.submittedAt,
+				answers: submission.answers,
+				feedback: submission.feedback,
+				student: submission.student ? {
+					id: submission.student.id,
+					firstName: submission.student.firstName,
+					lastName: submission.student.lastName,
+					email: submission.student.email
+				} : null,
+				assessment: submission.assessment ? {
+					id: submission.assessment.id,
+					title: submission.assessment.title,
+					questions: submission.assessment.questions
+				} : null
+			}));
+		} catch (error) {
+			console.error("Error fetching assessment submissions:", error);
+			return [];
+		}
 	}
 
 	public async createAssessment(data: AssessmentDataDTO): Promise<AssessmentEntity> {
@@ -286,110 +383,56 @@ export class AdminService {
 	}
 
 	public async getDashboardStats(period?: string) {
-		const now = new Date();
-		let startDate: Date;
-
-		switch (period) {
-			case 'week':
-				startDate = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
-				break;
-			case 'month':
-				startDate = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
-				break;
-			case 'year':
-				startDate = new Date(now.getTime() - 365 * 24 * 60 * 60 * 1000);
-				break;
-			default:
-				startDate = new Date(0);
-		}
-
-		const [
-			totalUsers,
-			activeUsers,
-			totalModules,
-			activeModules,
-			totalActivities,
-			activeActivities,
-			totalAssessments,
-			activeAssessments,
-			totalGrades,
-			averageGrade,
-			totalAnalytics,
-			averageTimeSpent,
-			totalActivations,
-			activeActivations,
-			recentUsers,
-			recentGrades,
-			topPerformers
-		] = await Promise.all([
-			usersRepository.count(),
-			usersRepository.count({ where: { isEnabled: true } }),
-			modulesRepository.count(),
-			modulesRepository.count({ where: { isEnabled: true } }),
-			labActivitiesRepository.count(),
-			labActivitiesRepository.count({ where: { isEnabled: true } }),
-			assessmentsRepository.count(),
-			assessmentsRepository.count({ where: { isEnabled: true } }),
-			gradesRepository.count(),
-			gradesRepository
-				.createQueryBuilder("grade")
-				.select("AVG(grade.score)", "average")
-				.getRawOne(),
-			performanceAnalyticsRepository.count(),
-			performanceAnalyticsRepository
-				.createQueryBuilder("analytics")
-				.select("AVG(analytics.timeSpentSeconds)", "average")
-				.getRawOne(),
-			moduleActivationsRepository.count(),
-			moduleActivationsRepository.count({ where: { isActive: true } }),
-			usersRepository.find({
-				order: { createdAt: "DESC" },
-				take: 5,
-				relations: ["userRole"]
-			}),
-			gradesRepository.find({
-				order: { createdAt: "DESC" },
-				take: 10,
-				relations: ["user", "activity"]
-			}),
-			gradesRepository
-				.createQueryBuilder("grade")
-				.leftJoinAndSelect("grade.user", "user")
-				.leftJoinAndSelect("grade.activity", "activity")
-				.select("user.id", "userId")
-				.addSelect("user.firstName", "firstName")
-				.addSelect("user.lastName", "lastName")
-				.addSelect("AVG(grade.score)", "averageScore")
-				.addSelect("COUNT(grade.id)", "totalGrades")
-				.groupBy("user.id, user.firstName, user.lastName")
-				.orderBy("averageScore", "DESC")
-				.limit(5)
-				.getRawMany()
-		]);
-
-		return {
-			overview: {
+		try {
+			const [
 				totalUsers,
 				activeUsers,
 				totalModules,
-				activeModules,
 				totalActivities,
-				activeActivities,
 				totalAssessments,
-				activeAssessments,
-				totalGrades,
-				averageGrade: parseFloat(averageGrade?.average || "0"),
-				totalAnalytics,
-				averageTimeSpent: parseFloat(averageTimeSpent?.average || "0"),
-				totalActivations,
-				activeActivations
-			},
-			recentActivity: {
-				recentUsers,
-				recentGrades
-			},
-			topPerformers,
-			period: period || 'all'
-		};
+				totalGrades
+			] = await Promise.all([
+				usersRepository.count().catch(() => 0),
+				usersRepository.count({ where: { isEnabled: true } }).catch(() => 0),
+				modulesRepository.count().catch(() => 0),
+				labActivitiesRepository.count().catch(() => 0),
+				assessmentsRepository.count().catch(() => 0),
+				gradesRepository.count().catch(() => 0)
+			]);
+
+			const averageGrade = await gradesRepository
+				.createQueryBuilder("grade")
+				.select("AVG(grade.score)", "average")
+				.getRawOne()
+				.catch(() => ({ average: "0" }));
+
+			return {
+				overview: {
+					totalUsers: totalUsers || 0,
+					activeUsers: activeUsers || 0,
+					totalModules: totalModules || 0,
+					activeModules: totalModules || 0,
+					totalActivities: totalActivities || 0,
+					activeActivities: totalActivities || 0,
+					totalAssessments: totalAssessments || 0,
+					activeAssessments: totalAssessments || 0,
+					totalGrades: totalGrades || 0,
+					averageGrade: parseFloat(averageGrade?.average || "0"),
+					totalAnalytics: 0,
+					averageTimeSpent: 0,
+					totalActivations: 0,
+					activeActivations: 0
+				},
+				recentActivity: {
+					recentUsers: [],
+					recentGrades: []
+				},
+				topPerformers: [],
+				period: period || 'all'
+			};
+		} catch (error) {
+			console.error("Error in getDashboardStats:", error);
+			throw error;
+		}
 	}
 }

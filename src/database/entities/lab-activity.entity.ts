@@ -1,6 +1,7 @@
 import "reflect-metadata";
-import { Entity, PrimaryGeneratedColumn, Column } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn } from "typeorm";
 import { DateFieldsEntity } from "./shared.entity";
+import { Module } from "./module.entity";
 
 @Entity()
 export class LabActivity extends DateFieldsEntity {
@@ -19,11 +20,14 @@ export class LabActivity extends DateFieldsEntity {
 	@Column({ type: "jsonb", nullable: true })
 	componentsMetadata?: any;
 
-	@Column({ type: "jsonb", nullable: true })
-	gamification?: any;
 
 	@Column({ type: "boolean", default: true })
 	isEnabled: boolean;
+
+	@ManyToOne(() => Module)
+	@JoinColumn({ name: 'moduleId' })
+	module?: Module;
+
 }
 
 

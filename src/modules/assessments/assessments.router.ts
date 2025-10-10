@@ -17,8 +17,10 @@ export class AssessmentsRouter {
 	}
 
 	private initializeRoutes() {
-		this.router.get("/module/:moduleId", CheckAuthMiddleware, this.controller.getByModuleHandler);
-		this.router.put("/module/:moduleId", CheckAuthMiddleware, CheckRoleMiddleware(["instructor"]), this.controller.upsertHandler);
+		this.router.get("/laboratory/:laboratoryId", CheckAuthMiddleware, this.controller.getByLaboratoryHandler);
+		this.router.post("/", CheckAuthMiddleware, CheckRoleMiddleware(["admin", "instructor"]), this.controller.createHandler);
+		this.router.put("/:id", CheckAuthMiddleware, CheckRoleMiddleware(["admin", "instructor"]), this.controller.updateHandler);
+		this.router.delete("/:id", CheckAuthMiddleware, CheckRoleMiddleware(["admin", "instructor"]), this.controller.deleteHandler);
 	}
 }
 

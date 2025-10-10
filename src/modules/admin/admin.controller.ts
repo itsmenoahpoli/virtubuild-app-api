@@ -572,6 +572,72 @@ export class AdminController extends BaseController {
 		}
 	}
 
+	public async getAllLaboratories(req: Request, res: Response) {
+		try {
+			const laboratories = await this.adminService.getAllLaboratories();
+			this.sendHttpResponse(res, laboratories);
+		} catch (error) {
+			console.error("Error getting laboratories:", error);
+			this.sendHttpResponse(res, { error: "Failed to get laboratories" }, HttpStatusCode.INTERNAL_SERVER_ERROR);
+		}
+	}
+
+	public async getLaboratoryById(req: Request, res: Response) {
+		try {
+			const { id } = req.params;
+			const laboratory = await this.adminService.getLaboratoryById(parseInt(id));
+			if (!laboratory) {
+				this.sendHttpResponse(res, { error: "Laboratory not found" }, HttpStatusCode.NOT_FOUND);
+				return;
+			}
+			this.sendHttpResponse(res, laboratory);
+		} catch (error) {
+			console.error("Error getting laboratory:", error);
+			this.sendHttpResponse(res, { error: "Failed to get laboratory" }, HttpStatusCode.INTERNAL_SERVER_ERROR);
+		}
+	}
+
+	public async createLaboratory(req: Request, res: Response) {
+		try {
+			const laboratoryData = req.body;
+			const laboratory = await this.adminService.createLaboratory(laboratoryData);
+			this.sendHttpResponse(res, laboratory, HttpStatusCode.CREATED);
+		} catch (error) {
+			console.error("Error creating laboratory:", error);
+			this.sendHttpResponse(res, { error: "Failed to create laboratory" }, HttpStatusCode.INTERNAL_SERVER_ERROR);
+		}
+	}
+
+	public async updateLaboratory(req: Request, res: Response) {
+		try {
+			const { id } = req.params;
+			const laboratoryData = req.body;
+			const laboratory = await this.adminService.updateLaboratory(parseInt(id), laboratoryData);
+			if (!laboratory) {
+				this.sendHttpResponse(res, { error: "Laboratory not found" }, HttpStatusCode.NOT_FOUND);
+				return;
+			}
+			this.sendHttpResponse(res, laboratory);
+		} catch (error) {
+			console.error("Error updating laboratory:", error);
+			this.sendHttpResponse(res, { error: "Failed to update laboratory" }, HttpStatusCode.INTERNAL_SERVER_ERROR);
+		}
+	}
+
+	public async deleteLaboratory(req: Request, res: Response) {
+		try {
+			const { id } = req.params;
+			const deleted = await this.adminService.deleteLaboratory(parseInt(id));
+			if (!deleted) {
+				this.sendHttpResponse(res, { error: "Laboratory not found" }, HttpStatusCode.NOT_FOUND);
+			}
+			this.sendHttpResponse(res, { message: "Laboratory deleted successfully" });
+		} catch (error) {
+			console.error("Error deleting laboratory:", error);
+			this.sendHttpResponse(res, { error: "Failed to delete laboratory" }, HttpStatusCode.INTERNAL_SERVER_ERROR);
+		}
+	}
+
 	public async getAllAssessments(req: Request, res: Response) {
 		try {
 			const assessments = await this.adminService.getAllAssessments();
@@ -593,6 +659,17 @@ export class AdminController extends BaseController {
 		} catch (error) {
 			console.error("Error getting assessment:", error);
 			this.sendHttpResponse(res, { error: "Failed to get assessment" }, HttpStatusCode.INTERNAL_SERVER_ERROR);
+		}
+	}
+
+	public async getAssessmentSubmissions(req: Request, res: Response) {
+		try {
+			const { id } = req.params;
+			const submissions = await this.adminService.getAssessmentSubmissions(parseInt(id));
+			this.sendHttpResponse(res, submissions);
+		} catch (error) {
+			console.error("Error getting assessment submissions:", error);
+			this.sendHttpResponse(res, { error: "Failed to get assessment submissions" }, HttpStatusCode.INTERNAL_SERVER_ERROR);
 		}
 	}
 
