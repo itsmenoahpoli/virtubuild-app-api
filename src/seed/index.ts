@@ -2,7 +2,6 @@ import { seedUserRoles } from "./seeders/user-roles.seeder";
 import { seedUsers } from "./seeders/users.seeder";
 import { seedModules } from "./seeders/modules.seeder";
 import { seedActivities } from "./seeders/activities.seeder";
-import { seedLaboratories } from "./seeders/laboratories.seeder";
 import { seedAssessments } from "./seeders/assessments.seeder";
 import { seedStudentGroups } from "./seeders/student-groups.seeder";
 import { seedStudentProgress } from "./seeders/progress.seeder";
@@ -21,7 +20,6 @@ export const runSeed = async () => {
 		await seedUsers();
 		await seedModules();
 		await seedActivities();
-		await seedLaboratories();
 		await seedAssessments();
 		await seedStudentGroups();
 		await seedStudentProgress();

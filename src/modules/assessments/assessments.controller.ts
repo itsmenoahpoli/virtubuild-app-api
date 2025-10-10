@@ -22,8 +22,22 @@ export class AssessmentsController extends BaseController {
 	 *     security:
 	 *       - BearerAuth: []
 	 */
-	public async getByLaboratoryHandler(request: Request, response: Response, next: NextFunction): Promise<any> {
-		const result = await this.assessmentsService.getByLaboratory(+request.params.laboratoryId);
+	public async getByLabActivityHandler(request: Request, response: Response, next: NextFunction): Promise<any> {
+		const result = await this.assessmentsService.getByLabActivity(+request.params.labActivityId);
+		return SendHttpResponse(response, result, HttpStatusCode.OK);
+	}
+
+	/**
+	 * @swagger
+	 * /assessments:
+	 *   get:
+	 *     summary: List all assessments
+	 *     tags: [Assessments]
+	 *     security:
+	 *       - BearerAuth: []
+	 */
+	public async listAllHandler(request: Request, response: Response, next: NextFunction): Promise<any> {
+		const result = await this.assessmentsService.listAll();
 		return SendHttpResponse(response, result, HttpStatusCode.OK);
 	}
 

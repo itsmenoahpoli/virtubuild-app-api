@@ -1,15 +1,15 @@
-import { assessmentsRepository, laboratoriesRepository } from "@/database";
+import { assessmentsRepository, labActivitiesRepository } from "@/database";
 
 export const seedAssessments = async () => {
   console.log("Seeding assessments...");
   
-  const laboratories = await laboratoriesRepository.find();
+  const labActivities = await labActivitiesRepository.find();
   
   const assessments = [
     {
-      laboratoryName: "Introduction to Tools and Components Laboratory",
-      title: "Tool Identification Assessment",
-      description: "Identify and name the tools commonly used in PC assembly and maintenance.",
+      labActivityName: "Module 1: Introduction to tools/components (e.g., screwdrivers, CPUs).",
+      title: "Module 1 Assessment",
+      description: "Assessment for Module 1: Introduction to tools/components - Identify tools and sort PC components.",
       timeLimitMinutes: 30,
       questions: [
         {
@@ -35,49 +35,19 @@ export const seedAssessments = async () => {
         },
         {
           id: 3,
-          question: "Which of the following is NOT a type of screwdriver commonly used in PC assembly?",
+          question: "Which component is responsible for processing data in a computer?",
           type: "multiple_choice",
-          options: ["Phillips", "Flathead", "Torx", "Sledgehammer"],
-          correctAnswer: 3,
+          options: ["RAM", "CPU", "Storage", "Power Supply"],
+          correctAnswer: 1,
           points: 10
         }
       ],
       isEnabled: true
     },
     {
-      laboratoryName: "Introduction to Tools and Components Laboratory",
-      title: "PC Component Sorting Assessment",
-      description: "Sort and categorize PC components based on their function and characteristics.",
-      timeLimitMinutes: 25,
-      questions: [
-        {
-          id: 1,
-          question: "Which component is responsible for processing data in a computer?",
-          type: "multiple_choice",
-          options: ["RAM", "CPU", "Storage", "Power Supply"],
-          correctAnswer: 1,
-          points: 15
-        },
-        {
-          id: 2,
-          question: "What is the main function of RAM in a computer system?",
-          type: "multiple_choice",
-          options: [
-            "Long-term storage",
-            "Temporary data storage",
-            "Power regulation",
-            "Data processing"
-          ],
-          correctAnswer: 1,
-          points: 15
-        }
-      ],
-      isEnabled: true
-    },
-    {
-      laboratoryName: "Desktop/Laptop Assembly Laboratory",
-      title: "Storage Media Installation Assessment",
-      description: "Demonstrate knowledge of storage media types and installation procedures.",
+      labActivityName: "Module 2: Desktop/laptop/motherboard assembly (includes UEFI interface simulation).",
+      title: "Module 2 Assessment",
+      description: "Assessment for Module 2: Desktop/laptop/motherboard assembly - Storage media, monitor connection, and UEFI interface.",
       timeLimitMinutes: 35,
       questions: [
         {
@@ -91,27 +61,10 @@ export const seedAssessments = async () => {
             "Install without securing"
           ],
           correctAnswer: 0,
-          points: 20
+          points: 15
         },
         {
           id: 2,
-          question: "Which interface is commonly used for connecting modern SSDs?",
-          type: "multiple_choice",
-          options: ["SATA", "PATA", "NVMe", "Both SATA and NVMe"],
-          correctAnswer: 3,
-          points: 20
-        }
-      ],
-      isEnabled: true
-    },
-    {
-      laboratoryName: "Desktop/Laptop Assembly Laboratory",
-      title: "Monitor Connection and UEFI Interface Assessment",
-      description: "Test knowledge of monitor connections and UEFI interface navigation.",
-      timeLimitMinutes: 40,
-      questions: [
-        {
-          id: 1,
           question: "Which cable type provides the best video quality for modern monitors?",
           type: "multiple_choice",
           options: ["VGA", "HDMI", "DVI", "Composite"],
@@ -119,7 +72,7 @@ export const seedAssessments = async () => {
           points: 15
         },
         {
-          id: 2,
+          id: 3,
           question: "What does UEFI stand for?",
           type: "multiple_choice",
           options: [
@@ -135,9 +88,9 @@ export const seedAssessments = async () => {
       isEnabled: true
     },
     {
-      laboratoryName: "Advanced PC Assembly Laboratory",
-      title: "Advanced Motherboard and CPU Installation Assessment",
-      description: "Demonstrate advanced skills in motherboard preparation and CPU installation procedures.",
+      labActivityName: "Module 3: Advanced tasks (e.g., processor installation, power systems).",
+      title: "Module 3 Assessment",
+      description: "Assessment for Module 3: Advanced tasks - Motherboard assembly, CPU installation, and power systems.",
       timeLimitMinutes: 45,
       questions: [
         {
@@ -151,7 +104,7 @@ export const seedAssessments = async () => {
             "Install cooler first"
           ],
           correctAnswer: 0,
-          points: 25
+          points: 20
         },
         {
           id: 2,
@@ -164,19 +117,10 @@ export const seedAssessments = async () => {
             "To make the CPU faster"
           ],
           correctAnswer: 1,
-          points: 25
-        }
-      ],
-      isEnabled: true
-    },
-    {
-      laboratoryName: "Advanced PC Assembly Laboratory",
-      title: "Power Systems and Boot Process Assessment",
-      description: "Test understanding of power supply connections and system boot procedures.",
-      timeLimitMinutes: 35,
-      questions: [
+          points: 20
+        },
         {
-          id: 1,
+          id: 3,
           question: "What is the most important consideration when selecting a power supply?",
           type: "multiple_choice",
           options: [
@@ -187,14 +131,6 @@ export const seedAssessments = async () => {
           ],
           correctAnswer: 1,
           points: 20
-        },
-        {
-          id: 2,
-          question: "Which connector powers the motherboard?",
-          type: "multiple_choice",
-          options: ["24-pin ATX", "8-pin EPS", "6-pin PCIe", "4-pin Molex"],
-          correctAnswer: 0,
-          points: 20
         }
       ],
       isEnabled: true
@@ -202,23 +138,18 @@ export const seedAssessments = async () => {
   ];
 
   for (const assessmentData of assessments) {
-    const laboratory = laboratories.find(la => la.name === assessmentData.laboratoryName);
-    if (laboratory) {
-      const exists = await assessmentsRepository.findOneBy({ laboratoryId: laboratory.id });
-      if (!exists) {
-        const assessment = assessmentsRepository.create({
-          laboratoryId: laboratory.id,
-          title: assessmentData.title,
-          description: assessmentData.description,
-          timeLimitMinutes: assessmentData.timeLimitMinutes,
-          questions: assessmentData.questions,
-          isEnabled: assessmentData.isEnabled
-        });
-        await assessmentsRepository.save(assessment);
-        console.log(`Created assessment: ${assessmentData.title} for laboratory: ${laboratory.name}`);
-      } else {
-        console.log(`Assessment already exists: ${assessmentData.title}`);
-      }
+    const labActivity = labActivities.find(la => la.title === assessmentData.labActivityName);
+    if (labActivity) {
+      const assessment = assessmentsRepository.create({
+        labActivityId: labActivity.id,
+        title: assessmentData.title,
+        description: assessmentData.description,
+        timeLimitMinutes: assessmentData.timeLimitMinutes,
+        questions: assessmentData.questions,
+        isEnabled: assessmentData.isEnabled
+      });
+      await assessmentsRepository.save(assessment);
+      console.log(`✅ Created assessment: ${assessmentData.title} for lab activity: ${labActivity.title}`);
     }
   }
 };

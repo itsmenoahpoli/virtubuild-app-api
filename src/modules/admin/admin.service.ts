@@ -3,7 +3,6 @@ import {
 	userRolesRepository, 
 	modulesRepository, 
 	labActivitiesRepository,
-	laboratoriesRepository, 
 	assessmentsRepository, 
 	assessmentSubmissionsRepository,
 	gradesRepository, 
@@ -13,7 +12,6 @@ import {
 	UserRoleEntity,
 	ModuleEntity,
 	LabActivityEntity,
-	LaboratoryEntity,
 	AssessmentEntity,
 	AssessmentSubmissionEntity,
 	GradeEntity,
@@ -25,7 +23,6 @@ import {
 	UserRoleDataDTO, 
 	ModuleDataDTO, 
 	LabActivityDataDTO, 
-	LaboratoryDataDTO,
 	AssessmentDataDTO, 
 	GradeDataDTO, 
 	PerformanceAnalyticsDataDTO, 
@@ -169,32 +166,6 @@ export class AdminService {
 		return result.affected !== 0;
 	}
 
-	public async getAllLaboratories(): Promise<LaboratoryEntity[]> {
-		return await laboratoriesRepository.find({
-			order: { createdAt: "DESC" }
-		});
-	}
-
-	public async getLaboratoryById(id: number): Promise<LaboratoryEntity | null> {
-		return await laboratoriesRepository.findOne({
-			where: { id }
-		});
-	}
-
-	public async createLaboratory(data: LaboratoryDataDTO): Promise<LaboratoryEntity> {
-		const laboratory = laboratoriesRepository.create(data);
-		return await laboratoriesRepository.save(laboratory);
-	}
-
-	public async updateLaboratory(id: number, data: Partial<LaboratoryDataDTO>): Promise<LaboratoryEntity | null> {
-		await laboratoriesRepository.update(id, data);
-		return await this.getLaboratoryById(id);
-	}
-
-	public async deleteLaboratory(id: number): Promise<boolean> {
-		const result = await laboratoriesRepository.delete(id);
-		return result.affected !== 0;
-	}
 
 	public async getAllAssessments(): Promise<any[]> {
 		try {
@@ -230,7 +201,7 @@ export class AdminService {
 	public async getAssessmentById(id: number): Promise<AssessmentEntity | null> {
 		return await assessmentsRepository.findOne({
 			where: { id },
-			relations: ["laboratory"]
+			relations: ["labActivity"]
 		});
 	}
 

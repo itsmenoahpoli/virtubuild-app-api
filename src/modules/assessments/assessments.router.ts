@@ -17,7 +17,8 @@ export class AssessmentsRouter {
 	}
 
 	private initializeRoutes() {
-		this.router.get("/laboratory/:laboratoryId", CheckAuthMiddleware, this.controller.getByLaboratoryHandler);
+		this.router.get("/", CheckAuthMiddleware, this.controller.listAllHandler);
+		this.router.get("/lab-activity/:labActivityId", CheckAuthMiddleware, this.controller.getByLabActivityHandler);
 		this.router.post("/", CheckAuthMiddleware, CheckRoleMiddleware(["admin", "instructor"]), this.controller.createHandler);
 		this.router.put("/:id", CheckAuthMiddleware, CheckRoleMiddleware(["admin", "instructor"]), this.controller.updateHandler);
 		this.router.delete("/:id", CheckAuthMiddleware, CheckRoleMiddleware(["admin", "instructor"]), this.controller.deleteHandler);

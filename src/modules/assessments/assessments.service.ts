@@ -1,13 +1,17 @@
 import { assessmentsRepository } from "@/database";
 
 export class AssessmentsService {
-	public async getByLaboratory(laboratoryId: number) {
-		return assessmentsRepository.find({ where: { laboratoryId } });
+	public async getByLabActivity(labActivityId: number) {
+		return assessmentsRepository.find({ where: { labActivityId } });
 	}
 
-	public async create(laboratoryId: number, assessmentData: any) {
+	public async listAll() {
+		return assessmentsRepository.find({ where: { isEnabled: true } });
+	}
+
+	public async create(labActivityId: number, assessmentData: any) {
 		const created = assessmentsRepository.create({
-			laboratoryId,
+			labActivityId,
 			...assessmentData,
 			isEnabled: true
 		});

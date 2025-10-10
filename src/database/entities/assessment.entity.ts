@@ -1,7 +1,7 @@
 import "reflect-metadata";
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany, JoinColumn } from "typeorm";
 import { DateFieldsEntity } from "./shared.entity";
-import { Laboratory } from "./laboratory.entity";
+import { LabActivity } from "./lab-activity.entity";
 import { AssessmentSubmission } from "./assessment-submission.entity";
 
 @Entity()
@@ -10,7 +10,7 @@ export class Assessment extends DateFieldsEntity {
 	id: number;
 
 	@Column()
-	laboratoryId: number;
+	labActivityId: number;
 
 	@Column()
 	title: string;
@@ -27,9 +27,9 @@ export class Assessment extends DateFieldsEntity {
 	@Column({ type: "boolean", default: true })
 	isEnabled: boolean;
 
-	@ManyToOne(() => Laboratory)
-	@JoinColumn({ name: 'laboratoryId' })
-	laboratory?: Laboratory;
+	@ManyToOne(() => LabActivity)
+	@JoinColumn({ name: 'labActivityId' })
+	labActivity?: LabActivity;
 
 	@OneToMany(() => AssessmentSubmission, submission => submission.assessment)
 	assessmentSubmissions?: AssessmentSubmission[];

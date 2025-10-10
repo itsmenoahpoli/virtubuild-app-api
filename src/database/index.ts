@@ -1,5 +1,5 @@
 import { DataSource, Repository, type DataSourceOptions } from "typeorm";
-import { User as UserEntity, UserRole as UserRoleEntity, Module as ModuleEntity, LabActivity as LabActivityEntity, Laboratory as LaboratoryEntity, Assessment as AssessmentEntity, Grade as GradeEntity, PerformanceAnalytics as PerformanceAnalyticsEntity, ModuleActivation as ModuleActivationEntity, StudentGroup as StudentGroupEntity, StudentGroupAssignment as StudentGroupAssignmentEntity, StudentProgress as StudentProgressEntity, Simulation as SimulationEntity, ModulePrerequisite as ModulePrerequisiteEntity, AssessmentSubmission as AssessmentSubmissionEntity, AuditLog as AuditLogEntity, Notification as NotificationEntity, NotificationPreference as NotificationPreferenceEntity, SystemSettings as SystemSettingsEntity } from "./entities";
+import { User as UserEntity, UserRole as UserRoleEntity, Module as ModuleEntity, LabActivity as LabActivityEntity, Assessment as AssessmentEntity, Grade as GradeEntity, PerformanceAnalytics as PerformanceAnalyticsEntity, ModuleActivation as ModuleActivationEntity, StudentGroup as StudentGroupEntity, StudentGroupAssignment as StudentGroupAssignmentEntity, StudentProgress as StudentProgressEntity, Simulation as SimulationEntity, ModulePrerequisite as ModulePrerequisiteEntity, AssessmentSubmission as AssessmentSubmissionEntity, AuditLog as AuditLogEntity, Notification as NotificationEntity, NotificationPreference as NotificationPreferenceEntity, SystemSettings as SystemSettingsEntity } from "./entities";
 import { SETTINGS } from "@/configs";
 
 const createDatabaseIfNotExists = async () => {
@@ -35,7 +35,7 @@ const DBDataSource = new DataSource({
   database: SETTINGS.APP_DB_DATABASE,
   synchronize: true,
   logging: false,
-  entities: [UserEntity, UserRoleEntity, ModuleEntity, LabActivityEntity, LaboratoryEntity, AssessmentEntity, GradeEntity, PerformanceAnalyticsEntity, ModuleActivationEntity, StudentGroupEntity, StudentGroupAssignmentEntity, StudentProgressEntity, SimulationEntity, ModulePrerequisiteEntity, AssessmentSubmissionEntity, AuditLogEntity, NotificationEntity, NotificationPreferenceEntity, SystemSettingsEntity],
+  entities: [UserEntity, UserRoleEntity, ModuleEntity, LabActivityEntity, AssessmentEntity, GradeEntity, PerformanceAnalyticsEntity, ModuleActivationEntity, StudentGroupEntity, StudentGroupAssignmentEntity, StudentProgressEntity, SimulationEntity, ModulePrerequisiteEntity, AssessmentSubmissionEntity, AuditLogEntity, NotificationEntity, NotificationPreferenceEntity, SystemSettingsEntity],
   migrations: [__dirname + "/migrations/*.migration.ts"],
   subscribers: [],
   extra: {
@@ -47,7 +47,6 @@ let usersRepository: Repository<UserEntity>;
 let userRolesRepository: Repository<UserRoleEntity>;
 let modulesRepository: Repository<ModuleEntity>;
 let labActivitiesRepository: Repository<LabActivityEntity>;
-let laboratoriesRepository: Repository<LaboratoryEntity>;
 let assessmentsRepository: Repository<AssessmentEntity>;
 let gradesRepository: Repository<GradeEntity>;
 let performanceAnalyticsRepository: Repository<PerformanceAnalyticsEntity>;
@@ -73,7 +72,6 @@ const initializeDatabase = async () => {
       userRolesRepository = DBDataSource.getRepository(UserRoleEntity);
       modulesRepository = DBDataSource.getRepository(ModuleEntity);
       labActivitiesRepository = DBDataSource.getRepository(LabActivityEntity);
-      laboratoriesRepository = DBDataSource.getRepository(LaboratoryEntity);
       assessmentsRepository = DBDataSource.getRepository(AssessmentEntity);
       gradesRepository = DBDataSource.getRepository(GradeEntity);
       performanceAnalyticsRepository = DBDataSource.getRepository(PerformanceAnalyticsEntity);
@@ -106,8 +104,6 @@ export {
   ModuleEntity,
   labActivitiesRepository,
   LabActivityEntity,
-  laboratoriesRepository,
-  LaboratoryEntity,
   assessmentsRepository,
   AssessmentEntity,
   gradesRepository,

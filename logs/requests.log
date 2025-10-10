@@ -386,3 +386,48 @@
 [2025-10-10T04:22:56.272Z] GET /api/admin/assessments 200 {}
 [2025-10-10T04:22:57.502Z] GET /api/admin/lab-activities 304 {}
 [2025-10-10T05:16:58.912Z] GET /api/admin/lab-activities 200 {}
+[2025-10-10T05:22:35.693Z] GET /api/admin/lab-activities 200 {}
+[2025-10-10T05:22:42.941Z] DELETE /api/admin/lab-activities/13 200 {}
+[2025-10-10T05:22:42.953Z] GET /api/admin/lab-activities 200 {}
+[2025-10-10T05:22:44.993Z] DELETE /api/admin/lab-activities/12 200 {}
+[2025-10-10T05:22:45.009Z] GET /api/admin/lab-activities 200 {}
+[2025-10-10T05:22:47.082Z] DELETE /api/admin/lab-activities/11 500 {}
+[2025-10-10T05:29:16.625Z] GET /api/admin/lab-activities - {}
+[2025-10-10T05:29:17.158Z] GET /api/admin/lab-activities 200 {}
+[2025-10-10T05:30:32.149Z] GET /api/admin/lab-activities 304 {}
+[2025-10-10T05:43:22.633Z] GET /api/admin/lab-activities 200 {}
+[2025-10-10T05:43:29.962Z] GET /api/admin/assessments 200 {}
+[2025-10-10T05:43:32.014Z] GET /api/admin/lab-activities 304 {}
+[2025-10-10T06:05:35.240Z] GET /api/activities 403 {}
+[2025-10-10T06:05:38.150Z] GET /api/system/healthcheck 304 {}
+[2025-10-10T06:05:50.319Z] POST /api/auth/signin 200 {"email":"admin@virtubuild.com","password":"Password123!"}
+[2025-10-10T06:05:50.398Z] GET /api/admin/dashboard/stats 200 {}
+[2025-10-10T06:05:55.220Z] GET /api/admin/users 200 {}
+[2025-10-10T06:05:55.230Z] GET /api/admin/user-roles 200 {}
+[2025-10-10T06:05:56.483Z] GET /api/admin/users 304 {}
+[2025-10-10T06:05:56.489Z] GET /api/admin/user-roles 304 {}
+[2025-10-10T06:05:57.506Z] GET /api/activities 200 {}
+[2025-10-10T06:07:20.793Z] GET /api/activities 304 {}
+[2025-10-10T06:07:59.461Z] GET /api/admin/assessments 200 {}
+[2025-10-10T06:08:11.949Z] GET /api/admin/assessments/5/submissions 200 {}
+[2025-10-10T06:08:41.673Z] GET /api/activities 304 {}
+[2025-10-10T06:08:45.418Z] PUT /api/activities/1 404 {"createdAt":"2025-10-10T06:04:50.726Z","updatedAt":"2025-10-10T06:04:50.726Z","deletedAt":null,"id":1,"title":"Module 1: Introduction to tools/components (e.g., screwdrivers, CPUs).","description":"- [ ] Identify tools on the table\n- [ ] Sort PC components (end of lab activity)","location":"Lab Room 101","capacity":"20 students","equipment":{"tools":["Screwdrivers","Anti-static wrist straps","Component trays"],"components":["CPUs","RAM modules","Motherboards","Storage devices","Power supplies"],"workstations":10},"componentsMetadata":null,"isEnabled":true}
+[2025-10-10T06:08:47.413Z] PUT /api/activities/1 404 {"createdAt":"2025-10-10T06:04:50.726Z","updatedAt":"2025-10-10T06:04:50.726Z","deletedAt":null,"id":1,"title":"Module 1: Introduction to tools/components (e.g., screwdrivers, CPUs).","description":"- [ ] Identify tools on the table\n- [ ] Sort PC components (end of lab activity)","location":"Lab Room 101","capacity":"20 students","equipment":{"tools":["Screwdrivers","Anti-static wrist straps","Component trays"],"components":["CPUs","RAM modules","Motherboards","Storage devices","Power supplies"],"workstations":10},"componentsMetadata":null,"isEnabled":true}
+[2025-10-10T06:10:30.728Z] PUT /api/activities/1 200 {"createdAt":"2025-10-10T06:04:50.726Z","updatedAt":"2025-10-10T06:04:50.726Z","deletedAt":null,"id":1,"title":"Module 1: Introduction to tools/components (e.g., screwdrivers, CPUs).","description":"- [ ] Identify tools on the table\n- [ ] Sort PC components (end of lab activity)","location":"Lab Room 101","capacity":"20 students","equipment":{"tools":["Screwdrivers","Anti-static wrist straps","Component trays"],"components":["CPUs","RAM modules","Motherboards","Storage devices","Power supplies"],"workstations":10},"componentsMetadata":null,"isEnabled":true}
+[2025-10-10T06:10:30.741Z] GET /api/activities 200 {}
+[2025-10-10T06:10:57.667Z] GET /api/activities 304 {}
+[2025-10-10T06:16:22.014Z] GET /api/admin/assessments 304 {}
+[2025-10-10T06:16:27.576Z] DELETE /api/admin/assessments/6 200 {}
+[2025-10-10T06:16:27.596Z] GET /api/admin/assessments 200 {}
+[2025-10-10T06:16:29.875Z] GET /api/admin/assessments/5/submissions 304 {}
+[2025-10-10T06:17:07.892Z] GET /api/admin/assessments 304 {}
+[2025-10-10T06:18:52.417Z] GET /api/activities 304 {}
+[2025-10-10T06:19:15.872Z] POST /api/admin/assessments 201 {"labActivityId":"3","title":"2222","description":"12121212","timeLimitMinutes":45,"isEnabled":true,"questions":[{"questionText":"212121","questionType":"enumeration","options":[{"value":"Item 122222","isCorrect":true,"order":1},{"value":"Item 32222","isCorrect":true,"order":2},{"value":"222222","isCorrect":false,"order":3}],"correctAnswer":0,"points":15,"explanation":"232121212"}]}
+[2025-10-10T06:19:15.915Z] GET /api/admin/assessments 200 {}
+[2025-10-10T06:19:20.233Z] DELETE /api/admin/assessments/7 200 {}
+[2025-10-10T06:19:20.248Z] GET /api/admin/assessments 200 {}
+[2025-10-10T06:19:28.570Z] GET /api/admin/users 304 {}
+[2025-10-10T06:19:28.625Z] GET /api/admin/user-roles 304 {}
+[2025-10-10T06:19:30.293Z] GET /api/activities 304 {}
+[2025-10-10T06:19:33.324Z] GET /api/admin/users 304 {}
+[2025-10-10T06:19:33.331Z] GET /api/admin/user-roles 304 {}
